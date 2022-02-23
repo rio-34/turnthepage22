@@ -1,4 +1,5 @@
 
+// This was copied from TarsosDSP by Joren Six and modified by Selen Serdar.
 
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;

@@ -1,5 +1,9 @@
 
+// This was copied from TarsosDSP by Joren Six and modified by Selen Serdar.
+
+
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -25,6 +29,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.AudioEvent;
@@ -55,6 +61,8 @@ public class PitchDetectorExample extends JFrame implements PitchDetectionHandle
 	private AudioDispatcher dispatcher;
 	private JPanel rightPanel;
 	private Mixer currentMixer;
+	private int windowsize = 10;
+	private int pagenum;
 	private Listened listened;
 	private PitchEstimationAlgorithm algo;
 	private ActionListener algoChangeListener = new ActionListener() {
@@ -76,16 +84,24 @@ public class PitchDetectorExample extends JFrame implements PitchDetectionHandle
 	public PitchDetectorExample(Reader input) throws IOException {
 		this.setLayout(new GridLayout(1, 0));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Pitch Detector");
+		this.setTitle("PAGE TURNER");
 		matcher = new EvenBetterMatcher();
-		listened = new Listened(5);
+		listened = new Listened(windowsize);
 
 		JPanel leftPanel = new JPanel();
 		rightPanel = new JPanel();
+
+	
+		JPanel big = new JPanel();
+		big.setLayout(new GridLayout(0,1));
+
 		leftPanel.setLayout(new GridLayout(0, 1));
 		rightPanel.setLayout(new GridLayout(0, 1));
 		add(leftPanel);
 		add(rightPanel);
+		add(big);
+		
+		
 		JPanel inputPanel = new InputPanel();
 		leftPanel.add(inputPanel);
 		inputPanel.addPropertyChangeListener("mixer",
@@ -114,8 +130,12 @@ public class PitchDetectorExample extends JFrame implements PitchDetectionHandle
 		textArea.setEditable(false);
 		leftPanel.add(new JScrollPane(textArea));
 
-	
+		BoxLayout asdfg = new BoxLayout(big, BoxLayout.Y_AXIS);
+		big.setLayout(asdfg);
+		big.setBorder(new EmptyBorder(new Insets(70,0,0,0)));
 		pages= new ArrayList<Page>();
+		//big.add()
+
 		
 		melody = Note.parse(input, pages);
 		for (int index =0 ; index< melody.size() ;index++) {
@@ -123,13 +143,20 @@ public class PitchDetectorExample extends JFrame implements PitchDetectionHandle
 			Page page = Page.findPage(pages, index);
 			note.label = new JLabel (note.toString());
 			note.label.setOpaque(true);
-			page.panel.add(note.label);
+			page.notepanel.add(note.label);
 			note.label.setBackground(Color.white);
+			if (page.plable==null){
+				
+				page.plable= new JLabel (String.format("page %d" ,page.number+1));
+				
+				page.numbers.add(page.plable);
+			}
 
 		}
 
 		currentpage=pages.get(0).panel;
 		rightPanel.add(currentpage);
+		
 
 	}
 
@@ -179,7 +206,7 @@ public class PitchDetectorExample extends JFrame implements PitchDetectionHandle
 				} catch (Exception e) {
 					// ignore failure to set default look en feel;
 				}
-				try (Reader input = new FileReader("furelise")) {
+				try (Reader input = new FileReader("PRELUDE1")) {
 					JFrame frame = new PitchDetectorExample(input);
 					frame.pack();
 					frame.setVisible(true);

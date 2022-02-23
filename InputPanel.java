@@ -1,4 +1,6 @@
 
+// This was copied from TarsosDSP by Joren Six and modified by Selen Serdar.
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;

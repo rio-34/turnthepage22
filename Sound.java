@@ -1,5 +1,5 @@
 
-
+//Written by Selen Serdar.
 public class Sound {
     String notename;
 	double timeStamp;

@@ -1,5 +1,5 @@
 
-
+//Copied from TarsosDSP by Joren Six.
 import java.util.Vector;
 
 import javax.sound.sampled.AudioSystem;
